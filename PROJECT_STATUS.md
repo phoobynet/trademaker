@@ -48,6 +48,13 @@ Before archival, the worktree passed TypeScript checking and all 79 unit tests.
 The formatting gate failed in four interrupted Dockview files. That failure was
 preserved deliberately instead of polishing code for an abandoned direction.
 
+Fresh verification after merging to `main` produced the same result: linting,
+TypeScript checking, all 79 unit tests, and the production build pass. The
+formatting check still fails in the four archived Dockview files. The
+`pnpm test:e2e` command also fails because no Playwright browser suite or
+configuration has been built yet; Playwright currently discovers source unit
+specifications that it cannot execute as browser tests.
+
 The old goal under `goals/multi-panel-workspace-demo` is blocked and obsolete.
 Its unchecked task list is also stale: it does not reflect the implementation
 commits already present.
