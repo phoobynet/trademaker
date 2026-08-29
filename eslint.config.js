@@ -25,11 +25,17 @@ export default [
         babelOptions: {
           babelrc: false,
           configFile: false,
-          plugins: ['@babel/plugin-syntax-typescript'],
+          parserOpts: {
+            plugins: [['typescript', { isTSX: true }], 'jsx'],
+          },
         },
         requireConfigFile: false,
         sourceType: 'module',
       },
+    },
+    rules: {
+      'no-undef': 'off',
+      'no-unused-vars': 'off',
     },
   },
   ...vue.configs['flat/recommended'],
@@ -45,7 +51,9 @@ export default [
         babelOptions: {
           babelrc: false,
           configFile: false,
-          plugins: ['@babel/plugin-syntax-typescript'],
+          parserOpts: {
+            plugins: [['typescript', { isTSX: true }], 'jsx'],
+          },
         },
         requireConfigFile: false,
         sourceType: 'module',

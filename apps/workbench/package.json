@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "typecheck": "node scripts/typecheck.mjs --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
+    "typecheck": "tsc --noEmit -p tsconfig.app-ts7.json && node scripts/typecheck.mjs --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
     "test:unit": "vitest run"
   },
   "dependencies": {
