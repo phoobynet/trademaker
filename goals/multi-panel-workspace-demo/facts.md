@@ -1,0 +1,24 @@
+# Facts
+
+- TradeMaker is a pnpm workspace monorepo, with the browser application located at `apps/workbench` and shared configuration kept at the repository root.
+- The workbench uses Vite 8, the latest stable Vue 3 release available when it is scaffolded, strict TypeScript, and exact dependency versions recorded in the pnpm lockfile.
+- The workbench uses Tailwind CSS 4 and daisyUI 5 for its visual system, while custom styling is limited to the workspace and docking integration that those libraries do not provide.
+- The demonstration uses the open-source Dockview Vue package as its panel layout engine and does not require Dockview Enterprise features.
+- TradeMaker runs as one single-page application in one browser tab; no panel opens an operating-system window, browser pop-out window, or second tab.
+- This goal does not add Tauri, Go services, a database, authentication, live language-model calls, or live news and market-data providers.
+- Every article, company, price, market movement, claim, and interpretation shown in the demonstration is local sample data and is visibly identified as simulated.
+- The default workspace tells one coherent TradeMaker story through panels for the news source, extracted evidence and claims, primary security, related companies, wider market, and guided interpretation.
+- A user can drag panels to split the workspace horizontally or vertically and can combine multiple panels into a tabbed group.
+- A user can resize adjacent docked panels by dragging their shared divider, with panel contents remaining usable after the resize.
+- A user can close a panel and later create it again from a clearly labelled panel menu without reloading the application.
+- A user can minimise any panel to a bottom taskbar, see each minimised panel by name, and restore an individual panel with one action.
+- A user can maximise one panel within the browser workspace and restore the exact layout that existed before maximising it.
+- A user can float a panel above the docked workspace, move and resize it, and dock it again; the floating panel always remains inside the same browser tab.
+- The workbench saves a versioned representation of the panel layout in browser storage and restores it after a browser reload; an invalid saved layout safely falls back to the default.
+- A clearly labelled reset action returns the workspace to its documented default layout and removes the previously saved layout.
+- The demonstration opens in a restrained dark workbench theme, offers a light-theme switch, and remembers the selected theme after reload.
+- Each panel is registered through a small TradeMaker-owned panel contract with a stable panel type, unique instance identifier, readable title, Vue component, and serializable parameters; domain panels do not manipulate Dockview directly.
+- Minimising, maximising, floating, docking, tabbing, and resizing preserve a panel's current demonstration state; closing and reopening a panel creates a clean instance from its sample defaults.
+- The monorepo tooling, workspace shell, layout persistence, and TradeMaker-owned panel contract are built to remain; the simulated analysis panels and sample content are isolated so they can be replaced as real features arrive.
+- The demonstration is desktop-first, remains usable in a 1280 by 720 browser viewport, provides keyboard-accessible labelled controls, visible focus, and no keyboard traps.
+- Root-level pnpm commands run formatting and static checks, unit and component tests, browser interaction tests, and a production build without requiring network services or credentials.

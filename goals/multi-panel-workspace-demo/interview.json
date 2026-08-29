@@ -1,0 +1,159 @@
+{
+  "stage": "interview",
+  "title": "Multi-panel workspace demonstrator",
+  "goalSlug": "multi-panel-workspace-demo",
+  "questions": [
+    {
+      "id": "minimise-behaviour",
+      "prompt": "What should minimise mean inside the single browser window?",
+      "description": "The application will not create operating-system windows, so minimising needs a clear in-workspace behaviour.",
+      "answerMode": "single-custom",
+      "recommendedAnswer": "Collapse the panel to an edge rail, keep its title visible, and restore it with one click.",
+      "recommendedOptionIds": [
+        "edge-rail"
+      ],
+      "options": [
+        {
+          "id": "edge-rail",
+          "label": "Collapse to an edge rail"
+        },
+        {
+          "id": "bottom-shelf",
+          "label": "Minimise to a bottom taskbar"
+        },
+        {
+          "id": "hide-reopen",
+          "label": "Hide and reopen from a panel menu"
+        }
+      ],
+      "required": true
+    },
+    {
+      "id": "workspace-behaviours",
+      "prompt": "Which workspace behaviours must the first demonstration prove?",
+      "description": "The requested essentials are preselected; internal floating and layout persistence are included because they materially affect the window-system choice.",
+      "answerMode": "multi-custom",
+      "recommendedAnswer": "Prove docking and splitting, tabbing, resizing, closing and reopening, minimising and restoring, maximising and restoring, internal floating, plus saved and resettable layouts.",
+      "recommendedOptionIds": [
+        "dock-split",
+        "tab",
+        "resize",
+        "close-reopen",
+        "minimise-restore",
+        "maximise-restore",
+        "internal-floating",
+        "persist-reset"
+      ],
+      "options": [
+        {
+          "id": "dock-split",
+          "label": "Dock and split panels"
+        },
+        {
+          "id": "tab",
+          "label": "Combine panels as tabs"
+        },
+        {
+          "id": "resize",
+          "label": "Resize adjacent panels"
+        },
+        {
+          "id": "close-reopen",
+          "label": "Close and reopen panels"
+        },
+        {
+          "id": "minimise-restore",
+          "label": "Minimise and restore panels"
+        },
+        {
+          "id": "maximise-restore",
+          "label": "Maximise and restore panels"
+        },
+        {
+          "id": "internal-floating",
+          "label": "Float panels inside the browser tab"
+        },
+        {
+          "id": "persist-reset",
+          "label": "Save and reset the workspace layout"
+        }
+      ],
+      "required": true
+    },
+    {
+      "id": "demonstration-content",
+      "prompt": "What should the panels contain while we test the workspace?",
+      "description": "Realistic TradeMaker content lets us assess whether the window system supports the eventual guided news-analysis experience.",
+      "answerMode": "single-custom",
+      "recommendedAnswer": "Use a realistic but clearly simulated TradeMaker story: news source, extracted evidence, primary security, related companies, wider market, and guided interpretation.",
+      "recommendedOptionIds": [
+        "trademaker-story"
+      ],
+      "options": [
+        {
+          "id": "trademaker-story",
+          "label": "Realistic TradeMaker story"
+        },
+        {
+          "id": "generic-panels",
+          "label": "Generic placeholder panels"
+        },
+        {
+          "id": "component-lab",
+          "label": "Window-system component laboratory"
+        }
+      ],
+      "required": true
+    },
+    {
+      "id": "visual-direction",
+      "prompt": "Which initial visual direction should the demonstrator use?",
+      "description": "This is a workspace default, not a final brand decision. The implementation will use Tailwind and daisyUI.",
+      "answerMode": "single-custom",
+      "recommendedAnswer": "Use a restrained dark trading-workbench theme by default and include a light-theme switch so both remain usable.",
+      "recommendedOptionIds": [
+        "dark-with-switch"
+      ],
+      "options": [
+        {
+          "id": "dark-with-switch",
+          "label": "Dark first with light switch"
+        },
+        {
+          "id": "dark-only",
+          "label": "Dark only"
+        },
+        {
+          "id": "light-with-switch",
+          "label": "Light first with dark switch"
+        }
+      ],
+      "required": true
+    },
+    {
+      "id": "prototype-longevity",
+      "prompt": "How much of this demonstrator should become the foundation of the real application?",
+      "description": "This determines whether we optimise for rapid learning, long-lived structure, or a deliberate mixture of both.",
+      "answerMode": "single-custom",
+      "recommendedAnswer": "Keep the monorepo, tooling, tested workspace shell, and panel contracts; treat all sample analysis content as replaceable.",
+      "recommendedOptionIds": [
+        "durable-shell"
+      ],
+      "options": [
+        {
+          "id": "durable-shell",
+          "label": "Keep the shell, replace the mock content"
+        },
+        {
+          "id": "fully-disposable",
+          "label": "Treat everything as disposable"
+        },
+        {
+          "id": "production-foundation",
+          "label": "Build everything as production foundation"
+        }
+      ],
+      "required": true
+    }
+  ]
+}
