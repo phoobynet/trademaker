@@ -14,7 +14,7 @@ export function provideWorkspace(
 }
 
 export function useWorkspace(): WorkspaceStore {
-  const store = inject(workspaceStoreKey);
+  const store = inject(workspaceStoreKey, null);
   if (!store) {
     throw new Error(
       'No TradeMaker workspace store was provided by the workspace shell.',

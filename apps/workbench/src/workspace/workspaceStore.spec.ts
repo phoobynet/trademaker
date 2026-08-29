@@ -82,43 +82,31 @@ describe('workspace state lifecycle', () => {
     expect(store.minimizedPanels).toHaveLength(0);
   });
 
-  it('does not replace panel state during layout-only operations', () => {
-    expect(storeModule).toBeDefined();
-    const { instance, store } = createOpenClaimsPanel();
-    store.replacePanelState(instance.instanceId, {
-      selectedClaimId: 'claim-yield-risk',
-    });
-    const stateBeforeLayoutChange = store.getPanelState(instance.instanceId);
-
-    for (const operation of [
-      'maximising',
-      'floating',
-      'docking',
-      'tabbing',
-      'resizing',
-    ]) {
-      expect(
-        store.getPanelState(instance.instanceId),
-        `${operation} should leave TradeMaker panel state alone`,
-      ).toBe(stateBeforeLayoutChange);
-    }
-  });
-
-  it('deletes state on close and uses fresh defaults when reopened', () => {
+  it('clears a minimised instance on close and reopens with freshly owned defaults', () => {
     expect(storeModule).toBeDefined();
     const { instance, store } = createOpenClaimsPanel();
     store.replacePanelState(instance.instanceId, {
       selectedClaimId: 'claim-trial-timing',
     });
     const selectedState = store.getPanelState(instance.instanceId);
+    store.minimizePanel(instance, {
+      kind: 'relative',
+      referenceInstanceId: 'panel-news-source',
+      position: 'right',
+    });
+    expect(store.minimizedPanels).toHaveLength(1);
 
     store.closePanel(instance.instanceId);
+
     expect(store.getPanelState(instance.instanceId)).toBeUndefined();
+    expect(store.minimizedPanels).toEqual([]);
 
     const reopened = createPanelInstance('evidence-claims');
     store.openPanel(reopened, createDefaultPanelState(reopened.type));
 
     expect(reopened.instanceId).toBe(instance.instanceId);
+    expect(reopened.parameters).toEqual(instance.parameters);
+    expect(reopened.parameters).not.toBe(instance.parameters);
     expect(store.getPanelState(reopened.instanceId)).toEqual({
       selectedClaimId: null,
     });
@@ -229,5 +217,20 @@ describe('workspace injection boundary', () => {
     const wrapper = mount(Shell);
     expect(receivedStore).toBe(store);
     wrapper.unmount();
+  });
+
+  it('fails readably when a mounted consumer has no shell provider', () => {
+    expect(injectionModule).toBeDefined();
+
+    const UnprovidedConsumer = defineComponent({
+      setup() {
+        injectionModule!.useWorkspace();
+        return () => h('span', 'Unreachable workspace child');
+      },
+    });
+
+    expect(() => mount(UnprovidedConsumer)).toThrow(
+      'No TradeMaker workspace store was provided by the workspace shell.',
+    );
   });
 });

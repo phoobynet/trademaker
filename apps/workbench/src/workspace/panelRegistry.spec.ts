@@ -115,14 +115,14 @@ describe('panel registry', () => {
     );
   });
 
-  it('recreates a closed singleton with fresh parameter ownership', () => {
+  it('returns a stable singleton ID with fresh parameters on every factory call', () => {
     expect(registryModule).toBeDefined();
 
     const first = registryModule?.createPanelInstance('evidence-claims');
-    const reopened = registryModule?.createPanelInstance('evidence-claims');
+    const second = registryModule?.createPanelInstance('evidence-claims');
 
-    expect(reopened?.instanceId).toBe(first?.instanceId);
-    expect(reopened?.parameters).toEqual(first?.parameters);
-    expect(reopened?.parameters).not.toBe(first?.parameters);
+    expect(second?.instanceId).toBe(first?.instanceId);
+    expect(second?.parameters).toEqual(first?.parameters);
+    expect(second?.parameters).not.toBe(first?.parameters);
   });
 });
