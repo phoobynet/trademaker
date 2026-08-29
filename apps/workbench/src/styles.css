@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+@import 'dockview-vue/dist/styles/dockview.css';
+@plugin 'daisyui' {
+  themes:
+    dark --default,
+    light;
+}
+
+@theme {
+  --font-sans:
+    ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  --workspace-taskbar-height: 2.5rem;
+}
