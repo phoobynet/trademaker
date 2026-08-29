@@ -1,15 +1,21 @@
+<script setup lang="ts">
+import DockWorkspace from './DockWorkspace.vue';
+</script>
+
 <template>
   <main
     aria-label="TradeMaker workspace"
-    class="grid min-h-dvh grid-rows-[auto_minmax(0,1fr)_var(--workspace-taskbar-height)] overflow-hidden bg-base-200 text-base-content"
+    class="grid h-dvh grid-rows-[auto_minmax(0,1fr)_var(--workspace-taskbar-height)] overflow-hidden bg-base-200 text-base-content"
   >
     <slot name="header" />
 
     <section
       aria-label="Docking canvas"
-      class="m-2 min-h-0 overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-sm sm:m-3"
+      class="m-2 h-full min-h-0 overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-sm sm:m-3"
     >
-      <slot />
+      <slot>
+        <DockWorkspace />
+      </slot>
     </section>
 
     <section
