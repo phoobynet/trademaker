@@ -22,8 +22,22 @@ The application should use freely overlapping in-browser windows with:
 - supporting tool windows for news, charts, filings, and related-company
   research.
 
-Whether the task dock is always visible or auto-hides remains undecided. Resolve
-that choice before implementing the replacement shell.
+The replacement shell will use a TradeMaker-owned TypeScript/Vue window
+manager, implemented with browser Pointer Events rather than another docking or
+window-interaction framework. The following product boundaries are approved for
+the first migration:
+
+- the task dock is always visible;
+- the initial desktop opens the Ticker Dossier, News, and Related Companies
+  windows;
+- each tool has at most one open window; activating its dock item focuses or
+  restores that window, or creates it when closed;
+- every window record still has a unique instance ID so later multi-window
+  workflows do not require a storage migration;
+- the replacement shell targets desktop-width viewports only; and
+- a typed, versioned Dexie database persists the serializable workspace model
+  in IndexedDB through a repository boundary. Vue components and the in-memory
+  window store do not access Dexie directly.
 
 ## Work worth keeping
 
@@ -65,15 +79,17 @@ commits already present.
 - Window geometry, z-order, focus, dragging, and edge/corner resizing.
 - The approved ticker-dossier and supporting tool-window structure.
 - Meaningful production-quality charts.
-- Workspace persistence and restoration for the replacement window model.
+- Dexie-backed workspace persistence and restoration for the replacement
+  window model.
 - Browser interaction and accessibility tests for the replacement interface.
 
 ## Safest continuation
 
 1. Preserve the historical Dockview commits; do not develop on top of them.
 2. Start a new branch/worktree from `fc7477f`.
-3. Write and review a replacement Graphite Observatory goal and implementation
-   plan, including the task-dock decision and a serializable free-window model.
+3. Write and review the detailed Graphite Observatory design and implementation
+   plan from the approved shell decisions above, including the serializable
+   free-window model and Dexie schema.
 4. Build the replacement shell test-first while reusing the foundation and
    domain content.
 
