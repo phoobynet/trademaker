@@ -23,7 +23,7 @@ describe('WorkspaceHeader', () => {
       screen.getByRole('button', { name: 'Reset workspace' }),
     ).toBeVisible();
     expect(
-      screen.getByRole('checkbox', { name: 'Use dark theme' }),
+      screen.getByRole('checkbox', { name: 'Use light theme' }),
     ).toBeVisible();
   });
 

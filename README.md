@@ -3,8 +3,8 @@
 ## Workbench visual language
 
 The browser workbench uses daisyUI semantic surfaces and content colours so
-the compact trading shell stays legible in its `light` default theme and its
-controller-selected `dark` theme. Interface type uses the local system font
+the compact trading shell stays legible in its `dark` default theme and its
+controller-selected `light` theme. Interface type uses the local system font
 stack, while the installed Lucide Vue icons support plain-language control
 labels rather than replacing them.
 

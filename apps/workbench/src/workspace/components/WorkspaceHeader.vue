@@ -82,14 +82,14 @@ import {
         class="tooltip tooltip-bottom flex h-8 cursor-pointer items-center gap-1 rounded-field px-1 text-base-content/70"
         data-tip="Switch between light and dark themes"
       >
-        <Sun :size="14" :stroke-width="1.8" aria-hidden="true" />
+        <Moon :size="14" :stroke-width="1.8" aria-hidden="true" />
         <input
           type="checkbox"
-          value="dark"
-          aria-label="Use dark theme"
+          value="light"
+          aria-label="Use light theme"
           class="theme-controller toggle toggle-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         />
-        <Moon :size="14" :stroke-width="1.8" aria-hidden="true" />
+        <Sun :size="14" :stroke-width="1.8" aria-hidden="true" />
       </label>
     </div>
   </header>

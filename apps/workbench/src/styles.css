@@ -2,8 +2,8 @@
 @import 'dockview-vue/dist/styles/dockview.css';
 @plugin 'daisyui' {
   themes:
-    light --default,
-    dark;
+    dark --default,
+    light;
 }
 
 @theme {
