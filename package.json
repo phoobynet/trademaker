@@ -1,0 +1,28 @@
+{
+  "name": "trademaker",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.11.0",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @trademaker/workbench dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "typecheck": "pnpm --filter @trademaker/workbench typecheck",
+    "test:unit": "pnpm --filter @trademaker/workbench test:unit",
+    "test:e2e": "playwright test",
+    "build": "pnpm --filter @trademaker/workbench build",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test:unit && pnpm test:e2e && pnpm build"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.62.1",
+    "eslint": "10.9.1",
+    "eslint-plugin-vue": "10.10.0",
+    "globals": "17.11.0",
+    "prettier": "3.9.6"
+  }
+}
