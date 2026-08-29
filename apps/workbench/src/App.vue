@@ -1,8 +1,12 @@
+<script setup lang="ts">
+import WorkspaceFrame from './workspace/components/WorkspaceFrame.vue';
+import WorkspaceHeader from './workspace/components/WorkspaceHeader.vue';
+</script>
+
 <template>
-  <main
-    aria-label="TradeMaker workspace"
-    class="min-h-dvh bg-base-200 p-4 text-base-content"
-  >
-    <p class="badge badge-outline">Simulated demonstration</p>
-  </main>
+  <WorkspaceFrame>
+    <template #header>
+      <WorkspaceHeader />
+    </template>
+  </WorkspaceFrame>
 </template>
