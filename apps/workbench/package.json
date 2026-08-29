@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
+    "typecheck": "node scripts/typecheck.mjs --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
     "test:unit": "vitest run"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/vue": "8.1.0",
+    "@typescript/typescript6": "6.0.2",
     "@types/node": "26.4.0",
     "@vitejs/plugin-vue": "6.0.8",
     "@vue/test-utils": "2.5.0",
@@ -27,6 +28,7 @@
     "typescript": "7.0.2",
     "vite": "8.2.2",
     "vitest": "4.1.11",
-    "vitest-axe": "0.1.0"
+    "vitest-axe": "0.1.0",
+    "vue-tsc": "3.3.11"
   }
 }
