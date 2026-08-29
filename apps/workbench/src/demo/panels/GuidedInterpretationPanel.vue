@@ -72,7 +72,7 @@ const activeItems = computed(() => {
         </p>
 
         <div
-          role="tablist"
+          role="group"
           class="tabs tabs-box tabs-sm"
           aria-label="Interpretation sections"
         >
@@ -80,10 +80,9 @@ const activeItems = computed(() => {
             v-for="section in sections"
             :key="section.id"
             type="button"
-            role="tab"
             class="tab"
             :class="{ 'tab-active': activeSection === section.id }"
-            :aria-selected="activeSection === section.id"
+            :aria-pressed="activeSection === section.id"
             @click="$emit('select-section', section.id)"
           >
             {{ section.label }}

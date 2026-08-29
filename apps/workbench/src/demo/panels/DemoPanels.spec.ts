@@ -5,6 +5,7 @@ import type { Component } from 'vue';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { sampleStory } from '../sampleStory';
+import SimulatedDataNotice from '../components/SimulatedDataNotice.vue';
 
 const panelModules = import.meta.glob<{ default: Component }>('./*.vue', {
   eager: true,
@@ -28,6 +29,17 @@ function expectSimulationNotice(): void {
     ),
   ).toBeVisible();
 }
+
+describe('SimulatedDataNotice', () => {
+  it('presents the repeated disclaimer as a labelled non-live note', () => {
+    render(SimulatedDataNotice);
+
+    expect(
+      screen.getByRole('note', { name: 'Simulated data notice' }),
+    ).toBeVisible();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+});
 
 describe('NewsSourcePanel', () => {
   it('explains the fictional source and emits a controlled detail intention', async () => {
@@ -260,6 +272,29 @@ describe('WiderMarketPanel', () => {
 });
 
 describe('GuidedInterpretationPanel', () => {
+  it('uses pressed buttons without claiming unsupported tab semantics', () => {
+    render(requirePanel('GuidedInterpretationPanel'), {
+      props: {
+        interpretation: sampleStory.guidedInterpretation,
+        activeSection: 'evidence',
+      },
+    });
+
+    expect(
+      screen.getByRole('group', { name: 'Interpretation sections' }),
+    ).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Evidence' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    expect(screen.getByRole('button', { name: 'Uncertainty' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
+    expect(screen.queryByRole('tab')).not.toBeInTheDocument();
+    expect(screen.queryByRole('tablist')).not.toBeInTheDocument();
+  });
+
   it('separates evidence from uncertainty and emits the requested section', async () => {
     const view = render(requirePanel('GuidedInterpretationPanel'), {
       props: {
@@ -277,7 +312,7 @@ describe('GuidedInterpretationPanel', () => {
     expect(screen.getByText('Not trading advice')).toBeVisible();
     expectSimulationNotice();
 
-    await fireEvent.click(screen.getByRole('tab', { name: 'Uncertainty' }));
+    await fireEvent.click(screen.getByRole('button', { name: 'Uncertainty' }));
 
     expect(view.emitted('select-section')).toEqual([['uncertainty']]);
   });
