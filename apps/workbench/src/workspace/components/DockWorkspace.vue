@@ -5,6 +5,7 @@ import { DockviewVue } from 'dockview-vue';
 import { panelRegistry } from '../panelRegistry';
 import {
   asWorkspaceDockviewComponent,
+  createWorkspaceDockviewRuntime,
   DockviewWorkspaceAdapter,
   provideWorkspaceLayout,
   type SerializedDockview,
@@ -39,11 +40,11 @@ provideWorkspace();
 provideWorkspaceLayout(layoutPort);
 
 function onReady(event: {
-  api: Parameters<WorkspaceLayoutPort['attach']>[0];
+  api: Parameters<typeof createWorkspaceDockviewRuntime>[0];
 }): void {
   if (initialized) return;
   initialized = true;
-  layoutPort.attach(event.api);
+  layoutPort.attach(createWorkspaceDockviewRuntime(event.api));
 
   if (props.savedLayout) {
     try {

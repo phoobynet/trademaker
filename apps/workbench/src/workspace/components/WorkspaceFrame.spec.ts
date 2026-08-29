@@ -17,9 +17,9 @@ describe('WorkspaceFrame', () => {
   it('exposes distinct docking-canvas and taskbar regions', () => {
     render(WorkspaceFrame);
 
-    expect(
-      screen.getByRole('region', { name: 'Docking canvas' }),
-    ).toBeInTheDocument();
+    const canvas = screen.getByRole('region', { name: 'Docking canvas' });
+    expect(canvas).toBeInTheDocument();
+    expect(canvas).not.toHaveClass('h-full');
     expect(
       screen.getByRole('region', { name: 'Workspace taskbar' }),
     ).toBeInTheDocument();

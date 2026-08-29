@@ -17,7 +17,26 @@ import { createWorkspaceStore, type WorkspaceStore } from '../workspaceStore';
 import type { PanelPlacement, WorkspacePanelInstance } from '../types';
 import { provideWorkspace } from '../useWorkspace';
 
-const dockviewHarness = vi.hoisted(() => ({ api: {} as unknown }));
+const dockviewHarness = vi.hoisted(() => ({
+  api: {
+    addFloatingGroup() {},
+    addPanel() {},
+    addPopoutGroup() {},
+    fromJSON() {},
+    get panels() {
+      return [];
+    },
+    getPanel() {},
+    onDidLayoutChange() {
+      return { dispose() {} };
+    },
+    removePanel() {},
+    toJSON() {
+      return { grid: {}, panels: {} };
+    },
+    updateOptions() {},
+  },
+}));
 
 vi.mock('dockview-vue', async () => {
   const vue = await import('vue');
@@ -33,7 +52,10 @@ vi.mock('dockview-vue', async () => {
       },
       emits: ['ready'],
       setup(props, { emit }) {
-        vue.onMounted(() => emit('ready', { api: dockviewHarness.api }));
+        vue.onMounted(() => {
+          emit('ready', { api: dockviewHarness.api });
+          emit('ready', { api: dockviewHarness.api });
+        });
         return () =>
           vue.h('div', {
             'data-testid': 'dockview-vue',
@@ -183,16 +205,28 @@ function renderWithWorkspace(
 afterEach(cleanup);
 
 describe('DockWorkspace', () => {
-  it('builds the six-panel default only after Dockview is ready', async () => {
+  it('attaches a popout-free capability object and builds defaults once after repeated ready events', async () => {
     const DockWorkspace = getComponent('DockWorkspace');
     expect(DockWorkspace).toBeDefined();
     const layoutPort = createLayoutPort();
 
     render(DockWorkspace!, { props: { layoutPort } });
 
-    await waitFor(() =>
-      expect(layoutPort.attached).toEqual([dockviewHarness.api]),
-    );
+    await waitFor(() => expect(layoutPort.attached).toHaveLength(1));
+    const attached = layoutPort.attached[0] as Record<string, unknown>;
+    expect(attached).not.toBe(dockviewHarness.api);
+    expect('addPopoutGroup' in attached).toBe(false);
+    expect(Object.keys(attached).sort()).toEqual([
+      'addFloatingGroup',
+      'addPanel',
+      'fromJSON',
+      'getPanel',
+      'onDidLayoutChange',
+      'panels',
+      'removePanel',
+      'toJSON',
+      'updateOptions',
+    ]);
     expect(layoutPort.added.map(({ instance }) => instance.type)).toEqual([
       'news-source',
       'evidence-claims',
@@ -201,6 +235,7 @@ describe('DockWorkspace', () => {
       'related-companies',
       'wider-market',
     ]);
+    expect(layoutPort.added).toHaveLength(6);
     expect(screen.getByTestId('dockview-vue')).toHaveAttribute(
       'data-floating-bounds',
       'boundedWithinViewport',

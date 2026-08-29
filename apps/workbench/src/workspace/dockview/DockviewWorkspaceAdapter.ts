@@ -13,6 +13,8 @@ import {
   type SerializablePanelParameters,
   type WorkspacePanelInstance,
 } from '../types';
+import { selectAlignedPanelPlacement } from './selectAlignedPanelPlacement';
+import { validateSerializedDockview } from './validateSerializedDockview';
 
 export interface Disposable {
   dispose(): void;
@@ -41,6 +43,44 @@ export interface WorkspaceDockviewComponentParameters {
 
 export type WorkspaceDockviewVueComponent = VueComponent;
 
+type PermittedDockviewCapability =
+  | 'addFloatingGroup'
+  | 'addPanel'
+  | 'fromJSON'
+  | 'getPanel'
+  | 'onDidLayoutChange'
+  | 'panels'
+  | 'removePanel'
+  | 'toJSON'
+  | 'updateOptions';
+
+/**
+ * The complete upstream API never crosses the TradeMaker attachment seam.
+ * In particular, this capability object has no popout/window operation.
+ */
+export type WorkspaceDockviewRuntime = Pick<
+  DockviewApi,
+  PermittedDockviewCapability
+>;
+
+export function createWorkspaceDockviewRuntime(
+  api: DockviewApi,
+): WorkspaceDockviewRuntime {
+  return Object.freeze({
+    addFloatingGroup: api.addFloatingGroup.bind(api),
+    addPanel: api.addPanel.bind(api),
+    fromJSON: api.fromJSON.bind(api),
+    get panels() {
+      return api.panels;
+    },
+    getPanel: api.getPanel.bind(api),
+    onDidLayoutChange: api.onDidLayoutChange.bind(api),
+    removePanel: api.removePanel.bind(api),
+    toJSON: api.toJSON.bind(api),
+    updateOptions: api.updateOptions.bind(api),
+  });
+}
+
 export function asWorkspaceDockviewComponent(
   component: Component,
 ): WorkspaceDockviewVueComponent {
@@ -48,7 +88,7 @@ export function asWorkspaceDockviewComponent(
 }
 
 export interface WorkspaceLayoutPort {
-  attach(containerApi: DockviewApi): void;
+  attach(containerApi: WorkspaceDockviewRuntime): void;
   addPanel(instance: WorkspacePanelInstance, placement?: PanelPlacement): void;
   removePanel(instanceId: string): void;
   capturePlacement(instanceId: string): PanelPlacement;
@@ -89,9 +129,9 @@ const dockviewDirection = {
 } as const;
 
 export class DockviewWorkspaceAdapter implements WorkspaceLayoutPort {
-  private containerApi: DockviewApi | undefined;
+  private containerApi: WorkspaceDockviewRuntime | undefined;
 
-  attach(containerApi: DockviewApi): void {
+  attach(containerApi: WorkspaceDockviewRuntime): void {
     this.containerApi = containerApi;
     containerApi.updateOptions({
       // Pointer DnD works consistently in embedded browser workspaces and
@@ -162,15 +202,14 @@ export class DockviewWorkspaceAdapter implements WorkspaceLayoutPort {
   }
 
   serialize(): SerializedDockview {
-    const layout = this.requireContainer().toJSON();
-    validateSerializedDockview(layout);
-    return layout as unknown as SerializedDockview;
+    return validateSerializedDockview(
+      this.requireContainer().toJSON(),
+    ) as unknown as SerializedDockview;
   }
 
   restore(layout: SerializedDockview): void {
-    validateSerializedDockview(layout);
     this.requireContainer().fromJSON(
-      layout as unknown as UpstreamSerializedDockview,
+      validateSerializedDockview(layout) as unknown as UpstreamSerializedDockview,
     );
   }
 
@@ -178,7 +217,7 @@ export class DockviewWorkspaceAdapter implements WorkspaceLayoutPort {
     return this.requireContainer().onDidLayoutChange(listener);
   }
 
-  private requireContainer(): DockviewApi {
+  private requireContainer(): WorkspaceDockviewRuntime {
     if (!this.containerApi) {
       throw new Error('The Dockview workspace adapter is not attached.');
     }
@@ -213,62 +252,71 @@ export class DockviewWorkspaceAdapter implements WorkspaceLayoutPort {
     const targetBounds = panel.group.api.boundingBox;
     if (!targetBounds) return { kind: 'default' };
 
-    const reference = this.requireContainer().panels.find(
-      (candidate) =>
-        candidate.group !== panel.group &&
-        candidate.group.api.boundingBox !== undefined,
-    );
-    const referenceBounds = reference?.group.api.boundingBox;
-    if (!reference || !referenceBounds) return { kind: 'default' };
+    const candidates = this.requireContainer().panels.flatMap((candidate) => {
+      const bounds = candidate.group.api.boundingBox;
+      if (candidate.group === panel.group || !bounds) return [];
 
-    const targetCenterX = targetBounds.left + targetBounds.width / 2;
-    const targetCenterY = targetBounds.top + targetBounds.height / 2;
-    const referenceCenterX = referenceBounds.left + referenceBounds.width / 2;
-    const referenceCenterY = referenceBounds.top + referenceBounds.height / 2;
-    const horizontalDistance = Math.abs(targetCenterX - referenceCenterX);
-    const verticalDistance = Math.abs(targetCenterY - referenceCenterY);
+      return [{ bounds, instanceId: candidate.id }];
+    });
 
-    let position: Exclude<
-      Extract<PanelPlacement, { kind: 'relative' }>['position'],
-      'tab'
-    >;
-    if (horizontalDistance >= verticalDistance) {
-      position = targetCenterX < referenceCenterX ? 'left' : 'right';
-    } else {
-      position = targetCenterY < referenceCenterY ? 'above' : 'below';
-    }
-
-    return {
-      kind: 'relative',
-      referenceInstanceId: reference.id,
-      position,
-    };
+    return selectAlignedPanelPlacement(targetBounds, candidates);
   }
 }
 
-function validateSerializedDockview(
-  layout: unknown,
-): asserts layout is UpstreamSerializedDockview {
-  if (!isRecord(layout)) {
-    throw new TypeError('Saved workspace layout must be an object.');
-  }
-  if (!isRecord(layout.grid) || !isRecord(layout.panels)) {
-    throw new TypeError(
-      'Saved workspace layout must contain Dockview grid and panel records.',
-    );
+function validateMaximizedNode(
+  maximizedNode: unknown,
+  root: unknown,
+  label: string,
+): void {
+  if (
+    !isPlainRecord(maximizedNode) ||
+    !Array.isArray(maximizedNode.location) ||
+    !maximizedNode.location.every(
+      (segment) => Number.isInteger(segment) && segment >= 0,
+    )
+  ) {
+    return invalidSavedLayout(`${label} maximized node location is invalid`);
   }
 
-  const popoutGroups = layout.popoutGroups;
+  let node = root;
+  for (const segment of maximizedNode.location) {
+    if (
+      !isPlainRecord(node) ||
+      node.type !== 'branch' ||
+      !Array.isArray(node.data) ||
+      segment >= node.data.length
+    ) {
+      return invalidSavedLayout(
+        `${label} maximized node does not reference the grid`,
+      );
+    }
+    node = node.data[segment];
+  }
+}
+
+function validatePopoutGroups(popoutGroups: unknown): void {
   if (popoutGroups !== undefined && !Array.isArray(popoutGroups)) {
-    throw new TypeError('Saved workspace popout groups must be an array.');
+    return invalidSavedLayout('popoutGroups must be an array');
   }
   if (Array.isArray(popoutGroups) && popoutGroups.length > 0) {
-    throw new TypeError(
-      'Saved workspace layouts with external-window groups are not supported.',
+    return invalidSavedLayout(
+      'layouts with external-window groups are not supported',
     );
   }
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
+function invalidSavedLayout(message: string): never {
+  throw new TypeError(`Saved workspace ${message}.`);
+}
+
+function isPlainRecord(value: unknown): value is Record<string, unknown> {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+    return false;
+  }
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
+function isFiniteNumber(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
 }

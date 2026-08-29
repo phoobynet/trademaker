@@ -11,7 +11,7 @@ import DockWorkspace from './DockWorkspace.vue';
 
     <section
       aria-label="Docking canvas"
-      class="m-2 h-full min-h-0 overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-sm sm:m-3"
+      class="m-2 min-h-0 overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-sm sm:m-3"
     >
       <slot>
         <DockWorkspace />
