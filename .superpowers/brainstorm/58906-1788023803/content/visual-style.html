@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TradeMaker visual direction</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family:
+          Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          "Segoe UI", sans-serif;
+        background: #080a0e;
+        color: #f4f6f8;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at 8% 8%, rgba(71, 92, 125, .16), transparent 28rem),
+          #080a0e;
+      }
+      .page { max-width: 1480px; margin: 0 auto; padding: 34px 34px 48px; }
+      .eyebrow { color: #8b96a8; font-size: 11px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+      h1 { margin: 8px 0 7px; font-size: clamp(25px, 3vw, 40px); letter-spacing: -.04em; font-weight: 640; }
+      .lead { margin: 0; max-width: 780px; color: #aab2bf; font-size: 14px; line-height: 1.6; }
+      .principles { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+      .pill { border: 1px solid #252b34; border-radius: 999px; padding: 5px 9px; color: #aeb6c2; background: rgba(255,255,255,.025); font-size: 10px; }
+      .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 17px; margin-top: 28px; }
+      .direction {
+        appearance: none;
+        width: 100%;
+        border: 1px solid #252a33;
+        border-radius: 16px;
+        padding: 0;
+        text-align: left;
+        color: inherit;
+        background: #101319;
+        cursor: pointer;
+        overflow: hidden;
+        box-shadow: 0 18px 54px rgba(0,0,0,.26);
+        transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+      }
+      .direction:hover { transform: translateY(-2px); border-color: #48515f; box-shadow: 0 22px 70px rgba(0,0,0,.38); }
+      .direction.selected { outline: 2px solid #edf3ff; outline-offset: 3px; }
+      .preview { position: relative; height: 330px; overflow: hidden; }
+      .caption { min-height: 138px; padding: 16px 17px 18px; border-top: 1px solid rgba(255,255,255,.07); background: #11151b; }
+      .caption-row { display:flex; justify-content:space-between; align-items:flex-start; gap: 12px; }
+      .caption h2 { margin:0; font-size:15px; letter-spacing:-.01em; font-weight:650; }
+      .tag { flex:none; padding:3px 6px; border-radius:5px; font-size:8px; letter-spacing:.08em; text-transform:uppercase; background:#20262f; color:#aeb8c7; }
+      .caption p { margin:8px 0 0; color:#929cab; font-size:11px; line-height:1.55; }
+      .footer-note { margin: 19px 0 0; color:#717b8b; font-size:11px; text-align:center; }
+
+      .desktop { position:absolute; inset:0; overflow:hidden; font-size:9px; letter-spacing:0; }
+      .menubar { height:23px; display:flex; align-items:center; gap:12px; padding:0 10px; position:relative; z-index:10; backdrop-filter:blur(16px); }
+      .brand { font-weight:750; letter-spacing:.01em; display:flex; align-items:center; gap:5px; }
+      .brand-mark { width:13px; height:13px; border-radius:4px; display:grid; place-items:center; }
+      .menu-spacer { flex:1; }
+      .menu-icon { width:12px; height:12px; opacity:.72; }
+      .window { position:absolute; border-radius:9px; overflow:hidden; box-shadow:0 16px 36px rgba(0,0,0,.46); }
+      .window.inactive { filter:saturate(.78); opacity:.88; }
+      .titlebar { height:24px; display:flex; align-items:center; padding:0 7px; gap:7px; border-bottom:1px solid rgba(255,255,255,.07); }
+      .controls { display:flex; gap:4px; }
+      .control { width:6px; height:6px; border-radius:50%; }
+      .window-icon { width:11px; height:11px; opacity:.7; margin-left:2px; }
+      .title { font-size:8px; font-weight:620; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .title-actions { margin-left:auto; display:flex; gap:7px; opacity:.6; }
+      .title-actions svg { width:9px; height:9px; }
+      .window-body { padding:9px; }
+      .metric-row { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; }
+      .metric { border-radius:5px; padding:6px; }
+      .metric-label { font-size:6.5px; text-transform:uppercase; letter-spacing:.08em; opacity:.55; }
+      .metric-value { font-size:11px; font-weight:680; margin-top:2px; }
+      .sparkline { width:100%; height:42px; margin-top:7px; }
+      .story-row { display:grid; grid-template-columns:22px 1fr auto; gap:7px; align-items:center; padding:6px 0; border-bottom:1px solid rgba(255,255,255,.055); }
+      .story-icon { width:22px; height:22px; border-radius:6px; display:grid; place-items:center; }
+      .story-icon svg { width:12px; height:12px; }
+      .story-title { font-size:7.5px; line-height:1.3; font-weight:570; }
+      .story-meta { font-size:6.5px; opacity:.5; margin-top:2px; }
+      .badge { font-size:6px; padding:2px 4px; border-radius:4px; text-transform:uppercase; letter-spacing:.04em; }
+      .taskdock { position:absolute; z-index:12; left:50%; bottom:9px; transform:translateX(-50%); height:32px; padding:4px 6px; border-radius:10px; display:flex; gap:5px; backdrop-filter:blur(18px); box-shadow:0 8px 24px rgba(0,0,0,.35); }
+      .dock-icon { width:23px; height:23px; border-radius:6px; display:grid; place-items:center; position:relative; }
+      .dock-icon svg { width:13px; height:13px; }
+      .dock-icon.active:after { content:""; position:absolute; width:3px; height:3px; border-radius:50%; bottom:-3px; }
+
+      /* A — graphite observatory */
+      .graphite .desktop { background: radial-gradient(circle at 78% 20%, #273442 0, #131a22 28%, #0c1117 68%); color:#e9eef4; }
+      .graphite .menubar { background:rgba(12,16,21,.7); border-bottom:1px solid rgba(255,255,255,.065); }
+      .graphite .brand-mark { background:#82d7c4; color:#07110f; }
+      .graphite .window { background:rgba(20,26,34,.96); border:1px solid #3a4553; }
+      .graphite .titlebar { background:#222b36; }
+      .graphite .control:nth-child(1) { background:#586473; }
+      .graphite .control:nth-child(2) { background:#7b8795; }
+      .graphite .control:nth-child(3) { background:#7fd5c2; }
+      .graphite .metric,.graphite .story-icon { background:#27313d; }
+      .graphite .metric-value,.graphite .positive { color:#8ee4ca; }
+      .graphite .badge { background:#234139; color:#91e4cc; }
+      .graphite .taskdock { background:rgba(29,37,47,.77); border:1px solid rgba(255,255,255,.12); }
+      .graphite .dock-icon { background:#303b48; color:#9ee7d3; }
+      .graphite .dock-icon.active:after { background:#8de2ca; }
+
+      /* B — mineral desk */
+      .mineral .desktop { background:radial-gradient(circle at 20% 0, #3b352e 0, #211f1c 34%, #121311 74%); color:#f1eee8; }
+      .mineral .menubar { background:rgba(29,27,24,.72); border-bottom:1px solid rgba(255,244,223,.08); }
+      .mineral .brand-mark { background:#d8a657; color:#1a1207; }
+      .mineral .window { background:rgba(35,33,29,.97); border:1px solid #575047; }
+      .mineral .titlebar { background:#38342e; }
+      .mineral .control:nth-child(1) { background:#6b6257; }
+      .mineral .control:nth-child(2) { background:#9d8c72; }
+      .mineral .control:nth-child(3) { background:#daa756; }
+      .mineral .metric,.mineral .story-icon { background:#403b34; }
+      .mineral .metric-value,.mineral .positive { color:#edbd70; }
+      .mineral .badge { background:#59482b; color:#f1c87f; }
+      .mineral .taskdock { background:rgba(56,51,44,.8); border:1px solid rgba(255,245,225,.13); }
+      .mineral .dock-icon { background:#4a443b; color:#edbd70; }
+      .mineral .dock-icon.active:after { background:#e9b664; }
+
+      /* C — signal studio */
+      .signal .desktop { background:radial-gradient(circle at 92% 2%, #1f3552 0, #101b2b 32%, #090f18 70%); color:#edf4ff; }
+      .signal .menubar { background:rgba(7,14,23,.75); border-bottom:1px solid rgba(143,196,255,.09); }
+      .signal .brand-mark { background:#75b7ff; color:#07111d; }
+      .signal .window { background:rgba(13,24,38,.97); border:1px solid #2b4968; }
+      .signal .titlebar { background:#172b42; }
+      .signal .control:nth-child(1) { background:#45617f; }
+      .signal .control:nth-child(2) { background:#6688a9; }
+      .signal .control:nth-child(3) { background:#6eb3ff; }
+      .signal .metric,.signal .story-icon { background:#1b3149; }
+      .signal .metric-value,.signal .positive { color:#7dc2ff; }
+      .signal .badge { background:#1a4261; color:#8ed0ff; }
+      .signal .taskdock { background:rgba(18,38,59,.78); border:1px solid rgba(129,190,255,.16); }
+      .signal .dock-icon { background:#244563; color:#85c8ff; }
+      .signal .dock-icon.active:after { background:#77beff; }
+
+      .w-market { left:17px; top:43px; width:54%; height:151px; z-index:3; }
+      .w-news { right:13px; top:75px; width:45%; height:179px; z-index:4; }
+      .w-guide { left:35px; top:181px; width:49%; height:112px; z-index:5; }
+      .guide-line { display:flex; gap:6px; margin-bottom:7px; }
+      .guide-symbol { width:18px;height:18px;border-radius:50%;display:grid;place-items:center;flex:none; }
+      .guide-symbol svg { width:10px;height:10px; }
+      .guide-copy { font-size:7px; line-height:1.42; opacity:.77; }
+
+      @media (max-width: 1000px) { .grid { grid-template-columns:1fr; } .preview { height:390px; } }
+      @media (max-width: 560px) { .page { padding:24px 14px 36px; } .preview { height:310px; } }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="eyebrow">TradeMaker · Visual direction</div>
+      <h1>Mac-like behaviour. Its own identity.</h1>
+      <p class="lead">Three compact desktop treatments. All use freely overlapping windows, familiar focus and task-dock behaviour, small typography, icon-led controls and real information graphics. Choose the atmosphere—not the final layout.</p>
+      <div class="principles">
+        <span class="pill">12px working text</span><span class="pill">26px title bars</span><span class="pill">free-position windows</span><span class="pill">subtle depth</span><span class="pill">charts over decoration</span>
+      </div>
+
+      <section class="grid" aria-label="Visual direction choices">
+        <button class="direction graphite" data-choice="graphite-observatory" onclick="toggleSelect(this)">
+          <div class="preview">
+            <div class="desktop">
+              <div class="menubar">
+                <span class="brand"><span class="brand-mark">T</span> TradeMaker</span><span>Dossier</span><span>Research</span><span>Window</span><span class="menu-spacer"></span>
+                <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v2m6.4.6-1.4 1.4M21 12h-2M18.4 18.4 17 17M12 21v-2M5.6 18.4 7 17M3 12h2M5.6 5.6 7 7"/><circle cx="12" cy="12" r="4"/></svg>
+                <span>10:42</span>
+              </div>
+              <div class="window w-market">
+                <div class="titlebar"><span class="controls"><i class="control"></i><i class="control"></i><i class="control"></i></span><svg class="window-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-7"/></svg><span class="title">AURC · Market context</span><span class="title-actions">···</span></div>
+                <div class="window-body">
+                  <div class="metric-row"><div class="metric"><div class="metric-label">Price</div><div class="metric-value">$84.26</div></div><div class="metric"><div class="metric-label">Session</div><div class="metric-value positive">+4.8%</div></div><div class="metric"><div class="metric-label">Signal</div><div class="metric-value">68</div></div></div>
+                  <svg class="sparkline" viewBox="0 0 220 42" preserveAspectRatio="none"><path d="M0 36 C25 34 29 28 47 30 S73 13 92 22 S122 29 141 15 S176 22 220 4" fill="none" stroke="#82d7c4" stroke-width="2"/><path d="M0 36 C25 34 29 28 47 30 S73 13 92 22 S122 29 141 15 S176 22 220 4 V42 H0Z" fill="rgba(130,215,196,.11)"/></svg>
+                </div>
+              </div>
+              <div class="window w-news">
+                <div class="titlebar"><span class="controls"><i class="control"></i><i class="control"></i><i class="control"></i></span><svg class="window-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg><span class="title">Evidence stream</span><span class="title-actions">···</span></div>
+                <div class="window-body"><div class="story-row"><span class="story-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 9l10 6 10-6-10-6Z"/><path d="m2 15 10 6 10-6"/></svg></span><span><div class="story-title">Nimbus-X trial brought forward</div><div class="story-meta">The Circuit Ledger · 2m</div></span><span class="badge">New</span></div><div class="story-row"><span class="story-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span><div class="story-title">Three customers request samples</div><div class="story-meta">Claim confidence · medium</div></span><span class="badge">68%</span></div><div class="story-row"><span class="story-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span><span><div class="story-title">Sector basket outperforms market</div><div class="story-meta">Context · simulated</div></span><span class="badge">+2.1</span></div></div>
+              </div>
+              <div class="window w-guide">
+                <div class="titlebar"><span class="controls"><i class="control"></i><i class="control"></i><i class="control"></i></span><svg class="window-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M8.5 14.5A7 7 0 1 1 15.5 14.5c-.9.7-1.5 1.5-1.5 2.5h-4c0-1-.6-1.8-1.5-2.5Z"/></svg><span class="title">What this may mean</span></div><div class="window-body"><div class="guide-line"><span class="guide-symbol story-icon">?</span><span class="guide-copy">Encouraging schedule news, but production reliability remains unproven.</span></div></div>
+              </div>
+              <div class="taskdock"><span class="dock-icon active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 8h8M8 12h5M8 16h7"/></svg></span><span class="dock-icon active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-7"/></svg></span><span class="dock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-4"/></svg></span></div>
+            </div>
+          </div>
+          <div class="caption"><div class="caption-row"><h2>A · Graphite Observatory</h2><span class="tag">Recommended</span></div><p>Quiet graphite surfaces, sea-glass signal colour and strong information hierarchy. Mac-like depth without copying macOS chrome.</p></div>
+        </button>
+
+        <button class="direction mineral" data-choice="mineral-research-desk" onclick="toggleSelect(this)">
+          <div class="preview">
+            <div class="desktop">
+              <div class="menubar"><span class="brand"><span class="brand-mark">T</span> TradeMaker</span><span>Dossier</span><span>Sources</span><span>Window</span><span class="menu-spacer"></span><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2"/></svg><span>10:42</span></div>
+              <div class="window w-market"><div class="titlebar"><span class="controls"><i class="control"></i><i class="control"></i><i class="control"></i></span><svg class="window-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-7"/></svg><span class="title">AURC · Price and peers</span><span class="title-actions">···</span></div><div class="window-body"><div class="metric-row"><div class="metric"><div class="metric-label">Price</div><div class="metric-value">$84.26</div></div><div class="metric"><div class="metric-label">Session</div><div class="metric-value positive">+4.8%</div></div><div class="metric"><div class="metric-label">Volume</div><div class="metric-value">1.8×</div></div></div><svg class="sparkline" viewBox="0 0 220 42" preserveAspectRatio="none"><path d="M0 34 C20 36 32 25 50 28 S78 17 96 23 S126 30 148 13 S180 20 220 6" fill="none" stroke="#d8a657" stroke-width="2"/><path d="M0 34 C20 36 32 25 50 28 S78 17 96 23 S126 30 148 13 S180 20 220 6V42H0Z" fill="rgba(216,166,87,.10)"/></svg></div></div>
+              <div class="window w-news"><div class="titlebar"><span class="controls"><i class="control"></i><i class="control"></i><i class="control"></i></span><svg class="window-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg><span class="title">Research notebook</span><span class="title-actions">···</span></div><div class="window-body"><div class="story-row"><span class="story-icon">01</span><span><div class="story-title">Earlier production trial</div><div class="story-meta">Direct statement · strong</div></span><span class="badge">Fact</span></div><div class="story-row"><span class="story-icon">02</span><span><div class="story-title">Customer interest, not orders</div><div class="story-meta">Important distinction</div></span><span class="badge">Caution</span></div><div class="story-row"><span class="story-icon">03</span><span><div class="story-title">Yield remains unknown</div><div class="story-meta">Research question</div></span><span class="badge">Open</span></div></div></div>
+              <div class="window w-guide"><div class="titlebar"><span class="controls"><i class="control"></i><i class="control"></i><i class="control"></i></span><svg class="window-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M8.5 14.5A7 7 0 1 1 15.5 14.5c-.9.7-1.5 1.5-1.5 2.5h-4c0-1-.6-1.8-1.5-2.5Z"/></svg><span class="title">Analyst note</span></div><div class="window-body"><div class="guide-line"><span class="guide-symbol story-icon">!</span><span class="guide-copy">A calm research-desk treatment that gives evidence a tactile, editorial feeling.</span></div></div></div>
+              <div class="taskdock"><span class="dock-icon active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg></span><span class="dock-icon active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-7"/></svg></span><span class="dock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3h14v18H5zM9 7h6M9 11h6M9 15h4"/></svg></span></div>
+            </div>
+          </div>
+          <div class="caption"><div class="caption-row"><h2>B · Mineral Research Desk</h2><span class="tag">Editorial</span></div><p>Warm mineral tones and notebook-like evidence treatment. More human and reflective; slightly less like a live market instrument.</p></div>
+        </button>
+
+        <button class="direction signal" data-choice="signal-studio" onclick="toggleSelect(this)">
+          <div class="preview">
+            <div class="desktop">
+              <div class="menubar"><span class="brand"><span class="brand-mark">T</span> TradeMaker</span><span>Signals</span><span>Evidence</span><span>Window</span><span class="menu-spacer"></span><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 0 1 16 0M7 12a5 5 0 0 1 10 0M10 12a2 2 0 0 1 4 0"/><path d="M12 14v7"/></svg><span>10:42</span></div>
+              <div class="window w-market"><div class="titlebar"><span class="controls"><i class="control"></i><i class="control"></i><i class="control"></i></span><svg class="window-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-7"/></svg><span class="title">AURC / signal monitor</span><span class="title-actions">···</span></div><div class="window-body"><div class="metric-row"><div class="metric"><div class="metric-label">Last</div><div class="metric-value">84.26</div></div><div class="metric"><div class="metric-label">Δ day</div><div class="metric-value positive">+4.8%</div></div><div class="metric"><div class="metric-label">Rel vol</div><div class="metric-value">1.8×</div></div></div><svg class="sparkline" viewBox="0 0 220 42" preserveAspectRatio="none"><path d="M0 36 L22 34 L39 30 L57 33 L76 19 L96 23 L119 29 L142 16 L163 18 L182 11 L220 5" fill="none" stroke="#75b7ff" stroke-width="2"/><path d="M0 36 L22 34 L39 30 L57 33 L76 19 L96 23 L119 29 L142 16 L163 18 L182 11 L220 5V42H0Z" fill="rgba(117,183,255,.10)"/></svg></div></div>
+              <div class="window w-news"><div class="titlebar"><span class="controls"><i class="control"></i><i class="control"></i><i class="control"></i></span><svg class="window-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg><span class="title">Live evidence map</span><span class="title-actions">···</span></div><div class="window-body"><div class="story-row"><span class="story-icon">N</span><span><div class="story-title">Production trial accelerated</div><div class="story-meta">Source · 10:40:12</div></span><span class="badge">+12</span></div><div class="story-row"><span class="story-icon">C</span><span><div class="story-title">Customer sample requests</div><div class="story-meta">Confidence · medium</div></span><span class="badge">+6</span></div><div class="story-row"><span class="story-icon">R</span><span><div class="story-title">Manufacturing yield unknown</div><div class="story-meta">Risk · unresolved</div></span><span class="badge">−9</span></div></div></div>
+              <div class="window w-guide"><div class="titlebar"><span class="controls"><i class="control"></i><i class="control"></i><i class="control"></i></span><svg class="window-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 18V6m5 12V9m5 9V4m5 14v-7"/></svg><span class="title">Signal explanation</span></div><div class="window-body"><div class="guide-line"><span class="guide-symbol story-icon">i</span><span class="guide-copy">The most data-dense treatment; precise, fast and less forgiving for a novice.</span></div></div></div>
+              <div class="taskdock"><span class="dock-icon active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg></span><span class="dock-icon active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-7"/></svg></span><span class="dock-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 0 1 16 0M8 12a4 4 0 0 1 8 0M12 12v9"/></svg></span></div>
+            </div>
+          </div>
+          <div class="caption"><div class="caption-row"><h2>C · Signal Studio</h2><span class="tag">Technical</span></div><p>Cool blue instrumentation and the highest data density. Fast and precise, but risks feeling like a conventional trading terminal.</p></div>
+        </button>
+      </section>
+      <p class="footer-note">Click the direction that feels closest. We will refine window shape, typography and iconography before any implementation.</p>
+    </main>
+  </body>
+</html>

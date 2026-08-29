@@ -1,0 +1,183 @@
+{
+  "stage": "facts",
+  "title": "Multi-panel workspace demonstrator",
+  "goalSlug": "multi-panel-workspace-demo",
+  "facts": [
+    {
+      "id": "monorepo-layout",
+      "text": "TradeMaker is a pnpm workspace monorepo, with the browser application located at apps/workbench and shared configuration kept at the repository root.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "frontend-stack",
+      "text": "The workbench uses Vite 8, the latest stable Vue 3 release available when it is scaffolded, strict TypeScript, and exact dependency versions recorded in the pnpm lockfile.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "visual-stack",
+      "text": "The workbench uses Tailwind CSS 4 and daisyUI 5 for its visual system, while custom styling is limited to the workspace and docking integration that those libraries do not provide.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "layout-engine",
+      "text": "The demonstration uses the open-source Dockview Vue package as its panel layout engine and does not require Dockview Enterprise features.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "single-browser-workspace",
+      "text": "TradeMaker runs as one single-page application in one browser tab; no panel opens an operating-system window, browser pop-out window, or second tab.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "demonstration-boundary",
+      "text": "This goal does not add Tauri, Go services, a database, authentication, live language-model calls, or live news and market-data providers.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "simulated-story",
+      "text": "Every article, company, price, market movement, claim, and interpretation shown in the demonstration is local sample data and is visibly identified as simulated.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "initial-panel-catalogue",
+      "text": "The default workspace tells one coherent TradeMaker story through panels for the news source, extracted evidence and claims, primary security, related companies, wider market, and guided interpretation.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "dock-and-tab",
+      "text": "A user can drag panels to split the workspace horizontally or vertically and can combine multiple panels into a tabbed group.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "resize",
+      "text": "A user can resize adjacent docked panels by dragging their shared divider, with panel contents remaining usable after the resize.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "close-and-reopen",
+      "text": "A user can close a panel and later create it again from a clearly labelled panel menu without reloading the application.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "minimise-taskbar",
+      "text": "A user can minimise any panel to a bottom taskbar, see each minimised panel by name, and restore an individual panel with one action.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "maximise-and-restore",
+      "text": "A user can maximise one panel within the browser workspace and restore the exact layout that existed before maximising it.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "contained-floating",
+      "text": "A user can float a panel above the docked workspace, move and resize it, and dock it again; the floating panel always remains inside the same browser tab.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "layout-persistence",
+      "text": "The workbench saves a versioned representation of the panel layout in browser storage and restores it after a browser reload; an invalid saved layout safely falls back to the default.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "layout-reset",
+      "text": "A clearly labelled reset action returns the workspace to its documented default layout and removes the previously saved layout.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "theme-behaviour",
+      "text": "The demonstration opens in a restrained dark workbench theme, offers a light-theme switch, and remembers the selected theme after reload.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "panel-contract",
+      "text": "Each panel is registered through a small TradeMaker-owned panel contract with a stable panel type, unique instance identifier, readable title, Vue component, and serializable parameters; domain panels do not manipulate Dockview directly.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "state-preservation",
+      "text": "Minimising, maximising, floating, docking, tabbing, and resizing preserve a panel's current demonstration state; closing and reopening a panel creates a clean instance from its sample defaults.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "durable-shell",
+      "text": "The monorepo tooling, workspace shell, layout persistence, and TradeMaker-owned panel contract are built to remain; the simulated analysis panels and sample content are isolated so they can be replaced as real features arrive.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "desktop-and-accessibility",
+      "text": "The demonstration is desktop-first, remains usable in a 1280 by 720 browser viewport, provides keyboard-accessible labelled controls, visible focus, and no keyboard traps.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    },
+    {
+      "id": "verification-entry-points",
+      "text": "Root-level pnpm commands run formatting and static checks, unit and component tests, browser interaction tests, and a production build without requiring network services or credentials.",
+      "accepted": false,
+      "removed": false,
+      "recommendedAutomatedVerification": true,
+      "automatedVerification": true
+    }
+  ]
+}
