@@ -1,5 +1,10 @@
 # TradeMaker
 
+## Development requirements
+
+- Node.js 24.x
+- pnpm 11.11.0
+
 ## Workbench visual language
 
 The browser workbench uses daisyUI semantic surfaces and content colours so

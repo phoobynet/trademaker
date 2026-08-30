@@ -1,6 +1,29 @@
 # TradeMaker Project Status
 
-Updated: 29 August 2026
+Updated: 30 August 2026
+
+## Deployment and user scope
+
+TradeMaker is a private, single-user application built solely for its owner.
+It is not a public service, SaaS product, multi-user system, or application
+intended for distribution to other users.
+
+This is a project-wide constraint:
+
+- do not build registration, user accounts, password recovery, organisations,
+  teams, roles, permissions, billing, collaboration, or tenant isolation;
+- do not introduce multi-tenant database schemas or public API compatibility
+  commitments;
+- optimise workflows, defaults, and stored preferences for one known user;
+- keep provider credentials and research data private to that user; and
+- run locally or on the owner's MS-02 Ultra, accessed through localhost or a
+  private LAN/VPN rather than exposing TradeMaker directly to the public
+  internet.
+
+Operating-system accounts, SSH, firewalling, private-network access, encrypted
+secrets, and backups remain infrastructure concerns. They must not grow into an
+application-level identity subsystem unless the owner explicitly changes this
+scope.
 
 ## Current direction
 
